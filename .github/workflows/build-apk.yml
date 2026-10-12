@@ -45,8 +45,7 @@ jobs:
 
       - name: Locate Gradle project
         run: |
-          find source -name gradlew -type f
-          find source -name settings.gradle -o -name settings.gradle.kts
+          find source -type f \( -name build.gradle -o -name build.gradle.kts -o -name gradlew -o -name settings.gradle -o -name settings.gradle.kts \)
 
       - name: Build APK
         run: |
