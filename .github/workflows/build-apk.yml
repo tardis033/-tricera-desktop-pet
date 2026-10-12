@@ -52,7 +52,27 @@ jobs:
           PROJECT_DIR="$(dirname "$(find "$GITHUB_WORKSPACE/source" -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)")"
           test -n "$PROJECT_DIR"
           cd "$PROJECT_DIR"
-          gradle assembleDebug
+          echo "Project directory: $PROJECT_DIR"
+          find . -path '*/build' -prune -o -type f \( -name build.gradle -o -name build.gradle.kts \) -print
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in Path(".").rglob("*"):
+              if p.is_dir() and p.name == "build":
+                  continue
+              if p.is_file() and p.name in ("build.gradle", "build.gradle.kts"):
+                  s = p.read_text()
+                  if "compileDebugJavaWithJavac" in s:
+                      continue
+                  if p.parent.name == "app":
+                      old = s
+                      s = s.replace("JavaVersion.VERSION_1_8", "JavaVersion.VERSION_17")
+                      s = s.replace('sourceCompatibility = "1.8"', 'sourceCompatibility = "17"')
+                      s = s.replace('targetCompatibility = "1.8"', 'targetCompatibility = "17"')
+                      if s != old:
+                          p.write_text(s)
+                          print("Updated Java target:", p)
+          PY
+          gradle assembleDebug 
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
