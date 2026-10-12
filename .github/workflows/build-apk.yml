@@ -1,5 +1,3 @@
-YAML
-
 name: Build TRICERA APK
 
 'on':
@@ -15,6 +13,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,17 +35,29 @@ jobs:
       - name: Install Android SDK
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
+      - name: Check source ZIP
+        run: |
+          ls -la
+          test -f TriceraDesktopPet_Source.zip
+
       - name: Extract source
         run: unzip TriceraDesktopPet_Source.zip -d source
 
+      - name: Locate Gradle project
+        run: |
+          find source -name gradlew -type f
+          find source -name settings.gradle -o -name settings.gradle.kts
+
       - name: Build APK
         run: |
-          cd source/tricera_pet
+          PROJECT_DIR="$(dirname "$(find "$GITHUB_WORKSPACE/source" -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)")"
+          test -n "$PROJECT_DIR"
+          cd "$PROJECT_DIR"
           gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: TRICERA-debug-APK
-          path: source/tricera_pet/app/build/outputs/apk/debug/app-debug.apk
+          path: source/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
