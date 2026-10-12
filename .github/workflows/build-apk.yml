@@ -2,7 +2,7 @@ YAML
 
 name: Build TRICERA APK
 
-on:
+'on':
   workflow_dispatch:
   push:
     paths:
@@ -15,7 +15,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,12 +34,10 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install Android SDK
-        run: |
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Extract source
-        run: |
-          unzip TriceraDesktopPet_Source.zip -d source
+        run: unzip TriceraDesktopPet_Source.zip -d source
 
       - name: Build APK
         run: |
