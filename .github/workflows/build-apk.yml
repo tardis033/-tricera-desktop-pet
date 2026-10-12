@@ -72,7 +72,15 @@ jobs:
                           p.write_text(s)
                           print("Updated Java target:", p)
           PY
-          gradle assembleDebug 
+          cat > /tmp/align-jvm.gradle <<'EOF'
+          allprojects {
+              tasks.withType(org.gradle.api.tasks.compile.JavaCompile).configureEach {
+                  sourceCompatibility = '17'
+                  targetCompatibility = '17'
+              }
+          }
+          EOF
+          gradle -I /tmp/align-jvm.gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
