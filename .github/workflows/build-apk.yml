@@ -46,13 +46,18 @@ jobs:
       - name: Locate Gradle project
         run: |
           find source -type f \( -name build.gradle -o -name build.gradle.kts -o -name gradlew -o -name settings.gradle -o -name settings.gradle.kts \)
-
+          echo "===== PetService.kt ====="
+          cat app/src/main/java/com/example/tricerapet/PetService.kt
+          echo "===== MainActivity.kt ====="
+          cat app/src/main/java/com/example/tricerapet/MainActivity.kt
+          echo "===== SettingsActivity.kt ====="
+          cat app/src/main/java/com/example/tricerapet/SettingsActivity.kt
       - name: Build APK
         run: |
           PROJECT_DIR="$(dirname "$(find "$GITHUB_WORKSPACE/source" -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)")"
           test -n "$PROJECT_DIR"
           cd "$PROJECT_DIR"
-          find app/src/main -type f
+                    find . -path '*/build' -prune -o -type f \( -name build.gradle -o -name build.gradle.kts \) -print
           gradle assembleDebug -Pkotlin.jvm.target.validation.mode=warning
 
       - name: Upload APK
