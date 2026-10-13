@@ -52,6 +52,7 @@ jobs:
           PROJECT_DIR="$(dirname "$(find "$GITHUB_WORKSPACE/source" -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)")"
           test -n "$PROJECT_DIR"
           cd "$PROJECT_DIR"
+          find app/src/main -type f
           gradle assembleDebug -Pkotlin.jvm.target.validation.mode=warning
 
       - name: Upload APK
