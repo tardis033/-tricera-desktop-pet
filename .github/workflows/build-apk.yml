@@ -58,6 +58,13 @@ jobs:
           test -n "$PROJECT_DIR"
           cd "$PROJECT_DIR"
                     find . -path '*/build' -prune -o -type f \( -name build.gradle -o -name build.gradle.kts \) -print
+                             echo "===== PetService.kt ====="
+          cat source/tricera_pet/app/src/main/java/com/example/tricerapet/PetService.kt
+          echo "===== MainActivity.kt ====="
+          cat source/tricera_pet/app/src/main/java/com/example/tricerapet/MainActivity.kt
+          echo "===== SettingsActivity.kt ====="
+          cat source/tricera_pet/app/src/main/java/com/example/tricerapet/SettingsActivity.kt
+
           gradle assembleDebug -Pkotlin.jvm.target.validation.mode=warning
 
       - name: Upload APK
