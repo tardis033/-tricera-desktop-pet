@@ -77,7 +77,16 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
+      - name: Print pet source files
+        shell: bash
+        run: |
+          set -e
+          for file in PetService.kt MainActivity.kt SettingsActivity.kt; do
+            echo "========== $file =========="
+            find source/tricera_pet -type f -name "$file" \
+              -exec cat {} \;
+            echo
+          done
       - name: Build debug APK
         shell: bash
         working-directory: ${{ steps.project.outputs.project_dir }}
