@@ -72,16 +72,18 @@ jobs:
             echo "::error::Cannot find the app Gradle build file."
             exit 1
           fi
-            - name: Print pet source files
+      - name: Print pet source files
         shell: bash
         run: |
           find source/tricera_pet -type f -name "PetService.kt" -exec cat {} \;
           find source/tricera_pet -type f -name "MainActivity.kt" -exec cat {} \;
           find source/tricera_pet -type f -name "SettingsActivity.kt" -exec cat {} \;
+          
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+     
       - name: Print pet source files
         shell: bash
         run: |
